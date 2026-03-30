@@ -1,0 +1,27 @@
+{
+  "name": "dronetrics",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev --mode=development",
+    "build": "vite ../../../build",
+    "preview": "vite preview",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "vue": "^3.5.31",
+    "vue-router": "^5.0.4",
+    "pinia": "^3.0.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.5",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
+    "eslint": "^10.1.0",
+    "vitest": "^4.1.2",
+    "@vue/test-utils": "^2.4.6",
+    "@vitest/coverage-v8": "^4.1.2"
+  }
+}
