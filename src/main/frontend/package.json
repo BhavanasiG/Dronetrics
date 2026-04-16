@@ -1,27 +1,40 @@
 {
   "name": "dronetrics",
-  "version": "1.0.0",
-  "description": "",
-  "private": true,
   "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
   "scripts": {
     "dev": "vite dev --mode=development",
     "build": "vite ../../../build",
     "preview": "vite preview",
-    "test": "vitest run --coverage"
+    "test": "vitest run --coverage",
+    "lint": "eslint . --fix",
+    "format": "prettier --write src/"
   },
   "dependencies": {
+    "@primevue/themes": "^4.5.4",
+    "pinia": "^3.0.4",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.5.5",
     "vue": "^3.5.31",
-    "vue-router": "^5.0.4",
-    "pinia": "^3.0.4"
+    "vue-router": "^5.0.4"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^8.2.0",
+    "@types/node": "^25.5.2",
     "@vitejs/plugin-vue": "^6.0.5",
-    "vite": "^8.0.3",
-    "typescript": "^6.0.2",
-    "eslint": "^10.1.0",
-    "vitest": "^4.1.2",
+    "@vitest/coverage-v8": "^4.1.2",
+    "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/test-utils": "^2.4.6",
-    "@vitest/coverage-v8": "^4.1.2"
+    "eslint": "^10.2.0",
+    "eslint-plugin-jest": "^29.15.1",
+    "eslint-plugin-pinia": "^0.4.2",
+    "eslint-plugin-testing-library": "^7.16.2",
+    "eslint-plugin-vue": "^10.8.0",
+    "prettier": "^3.8.1",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3",
+    "vitest": "^4.1.2"
   }
 }
