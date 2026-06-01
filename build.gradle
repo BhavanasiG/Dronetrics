@@ -33,6 +33,7 @@ dependencies {
   testImplementation 'org.junit.jupiter:junit-jupiter'
   testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
   runtimeOnly 'com.h2database:h2'
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
 test {
