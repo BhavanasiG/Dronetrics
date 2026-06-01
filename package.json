@@ -5,11 +5,11 @@
   "private": true,
   "description": "",
   "scripts": {
-    "dev": "vite dev --mode=development",
-    "build": "vite ../../../build",
-    "preview": "vite preview",
+    "dev": "vite dev src/main/frontend --mode=development",
+    "build": "vite build src/main/frontend",
+    "preview": "vite preview src/main/frontend",
     "test": "vitest run --coverage",
-    "lint": "eslint . --fix",
+    "lint": "eslint src/main/frontend --fix",
     "format": "prettier --write src/"
   },
   "dependencies": {

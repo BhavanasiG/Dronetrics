@@ -2,12 +2,14 @@ import {createApp} from "vue";
 import PrimeVue from "primevue/config";
 import Aura from "@primevue/themes/aura";
 import "primeicons/primeicons.css";
-import DronetricsPage from "@/pages/DronetricsPage.vue";
+import App from "@/App.vue";
+import {router} from "@/router";
 import {setDynamicFavicon} from "@/branding/logo.js";
+import {createPinia} from "pinia";
 
 
 setDynamicFavicon();
-const app = createApp(DronetricsPage);
+const app = createApp(App);
 
 app.use(PrimeVue, {
   theme: {
@@ -19,9 +21,7 @@ app.use(PrimeVue, {
   ripple: true,
 });
 
-/* // TODO: Implement Pinia and Router
+const pinia = createPinia();
 app.use(pinia);
-app.use(router); */
+app.use(router);
 app.mount("#dronetrics-app");
-
-

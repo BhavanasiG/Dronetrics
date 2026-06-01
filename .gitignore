@@ -3,6 +3,7 @@
 .env
 out
 build/
+dist
 node_modules
 *.iml
 **/resources/static

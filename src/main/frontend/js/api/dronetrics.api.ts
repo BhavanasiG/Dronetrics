@@ -1,36 +1,60 @@
 const DRONETRICS_ENDPOINT = "/rest/api/drone";
 
-export type JsonDroneRepo = {
-    id: number,
-    uid: string,
-    user_id: number,
-    namespace: string,
-    name: string,
-    slug: string,
-    scm: string,
-    git_http_url: string,
-    git_ssh_url: string,
+export type DroneRepo = {
+    repoName: string,
     link: string,
-    default_branch: string,
-    private: boolean,
-    visibility: string,
-    active: true,
-    config_path: string,
-    trusted: boolean,
-    protected: boolean,
-    ignore_forks: boolean,
-    ignore_pull_requests: boolean,
-    timeout: number,
-    counter: number,
-    synced: number,
-    created: number,
-    updated: number,
-    version: number
+    build: DroneBuild,
 }
 
-/* TODO: This needs to be called in a store */
-export async function getDroneRepositories(): Promise<JsonDroneRepo[]> {
-    const response = await fetch(DRONETRICS_ENDPOINT);
+export interface DroneBuild {
+    buildNumber: number;
+    status: BuildStatus;
+    link: string;
+    event: BuildEvent;
+    title: string;
+    sourceRepo: string;
+    sourceBranch: string;
+    targetBranch: string;
+    authorAvatar: string;
+    author: string;
+    lastUpdated: Date;
+}
+
+export type BuildStatus =
+    | 'PENDING'
+    | 'RUNNING'
+    | 'SUCCESS'
+    | 'FAILURE'
+    | 'KILLED'
+    | 'ERROR'
+    | 'SKIPPED'
+    | 'BLOCKED'
+    | 'DECLINED'
+    | 'WAITING_ON_DEPENDENCIES'
+    | 'UNKNOWN';
+
+export type BuildEvent =
+    | 'PUSH'
+    | 'PULL_REQUEST'
+    | 'TAG'
+    | 'PROMOTE'
+    | 'ROLLBACK'
+    | 'CRON'
+    | 'CUSTOM'
+    | 'UNKNOWN';
+
+export async function getDroneRepos(): Promise<DroneRepo[]> {
+    const response = await fetch(DRONETRICS_ENDPOINT + "/repos");
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch drone data: ${response.status}`);
+    }
+
+    return await response.json();
+}
+
+export async function getSpecificDroneBuild(fullRepoName: string): Promise<DroneBuild[]> {
+    const response = await fetch(DRONETRICS_ENDPOINT + `/builds?repoName=${fullRepoName}`);
 
     if (!response.ok) {
         throw new Error(`Failed to fetch drone data: ${response.status}`);

@@ -10,9 +10,9 @@ export default defineConfig({
         }
     },
     server: {
-        port: 3000, // Vite port
+        port: 3000,
         proxy: {
-            '/rest': 'http://localhost:8080' // Spring boot backend
+            '/rest': 'http://localhost:2004'
         }
     }
 });
