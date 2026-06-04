@@ -1,9 +1,5 @@
 <template>
   <div style="padding: 2rem;">
-    <Sidebar :visible="true" header="Sidebar">
-      <div v-html="logoSvg"></div>
-    </Sidebar>
-
     <router-link :to="{ name: 'repos' }">&larr; Back to repositories</router-link>
 
     <h1 style="margin: 1rem 0 2rem;">{{ repoName }}</h1>
@@ -13,11 +9,17 @@
       <template #header>
         <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end;">
           <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <Checkbox v-model="showAll" inputId="showAll" binary />
+            <Checkbox v-model="showAll" binary inputId="showAll"/>
             <label for="showAll">Show all</label>
           </div>
-          <MultiSelect v-model="filters['event'].value" :options="eventOptions" :maxSelectedLabels="2" display="chip" placeholder="Filter events" showClear style="min-width: 14rem;" />
-          <MultiSelect v-model="filters['author'].value" :options="authorOptions" :maxSelectedLabels="2" display="chip" filter filterPlaceholder="Search usernames" placeholder="Filter usernames" showClear style="min-width: 14rem;" />
+          <MultiSelect
+              v-model="filters['event'].value" :maxSelectedLabels="2" :options="eventOptions" display="chip"
+              placeholder="Filter events" showClear style="min-width: 14rem;"
+          />
+          <MultiSelect
+              v-model="filters['author'].value" :maxSelectedLabels="2" :options="authorOptions" display="chip" filter
+              filterPlaceholder="Search usernames" placeholder="Filter usernames" showClear style="min-width: 14rem;"
+          />
         </div>
       </template>
       <template #empty> No builds found.</template>
@@ -25,22 +27,26 @@
 
       <Column field="buildNumber" header="Build Number" sortable>
         <template #body="{ data }">
-          <a :href="buildLink(data)" target="_blank" rel="noopener noreferrer">{{ data.buildNumber }}</a>
+          <a :href="buildLink(data)" rel="noopener noreferrer" target="_blank">{{ data.buildNumber }}</a>
         </template>
       </Column>
       <Column field="status" header="Status" sortable></Column>
       <Column field="event" header="Event" sortable></Column>
-      <Column field="title" header="Title"></Column>
+      <Column field="title" header="Title">
+        <template #body="{ data }">
+          <a :href="data.link" rel="noopener noreferrer" target="_blank">{{ data.title }}</a>
+        </template>
+      </Column>
       <Column field="sourceBranch" header="Branch">
         <template #body="{ data }">
-          <a :href="branchLink(data)" target="_blank" rel="noopener noreferrer">{{ data.sourceBranch }}</a>
+          <a :href="branchLink(data)" rel="noopener noreferrer" target="_blank">{{ data.sourceBranch }}</a>
         </template>
       </Column>
       <Column field="lastUpdated" header="Last Updated" sortable></Column>
       <Column field="author" header="Author">
         <template #body="{ data }">
           <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <Avatar :image="data.authorAvatar" shape="circle" />
+            <Avatar :image="data.authorAvatar" shape="circle"/>
             <span>{{ data.author }}</span>
           </div>
         </template>
@@ -60,6 +66,7 @@ import {defineComponent} from "vue";
 import {getFavicon} from "@/branding/logo";
 import {useDroneBuildsStore} from "@/store/dronetrics-builds.store";
 import {BuildEvent, DroneBuild} from "@/js/api/dronetrics.api";
+import {DroneRepoType} from "@/store/dronetrics-repos.store";
 
 const EVENT_OPTIONS: BuildEvent[] = [
   "PUSH",
@@ -106,24 +113,40 @@ export default defineComponent({
       const repo = this.$route.query.repo;
       return Array.isArray(repo) ? (repo[0] ?? "") : (repo ?? "");
     },
+    repoType(): DroneRepoType {
+      const repoType = this.$route.query.repoType;
+      return Array.isArray(repoType) ? (repoType[0] ?? 'ecase') : (repoType ?? 'ecase');
+    },
     builds(): DroneBuild[] {
       if (this.showAll) {
         return this.droneBuildsStore.sortedDroneBuilds;
       }
+
       const byBranch = new Map<string, DroneBuild>();
       const prTitleByBranch = new Map<string, string>();
+      const prTitleToLink = new Map<string, string>();
+
       for (const build of this.droneBuildsStore.sortedDroneBuilds) {
         const existing = byBranch.get(build.sourceBranch);
+
         if (!existing || this.isPreferredBuild(build, existing)) {
           byBranch.set(build.sourceBranch, build);
         }
-        if (build.event === "PULL_REQUEST" && !prTitleByBranch.has(build.sourceBranch)) {
+
+        if (build.event === "PULL_REQUEST" && (!prTitleByBranch.has(build.sourceBranch) || !prTitleToLink.has(build.sourceBranch))) {
           prTitleByBranch.set(build.sourceBranch, build.title);
+          prTitleToLink.set(build.sourceBranch, build.link);
         }
       }
-      return [...byBranch.values()].map(build => {
+
+      const withPrTitle = [...byBranch.values()].map(build => {
         const prTitle = prTitleByBranch.get(build.sourceBranch);
         return prTitle ? {...build, title: prTitle} : build;
+      });
+
+      return [...withPrTitle].map(build => {
+        const prLink = prTitleToLink.get(build.sourceBranch);
+        return prLink ? {...build, link: prLink} : build;
       });
     },
     authorOptions(): string[] {
@@ -133,7 +156,11 @@ export default defineComponent({
 
   methods: {
     buildLink(build: DroneBuild): string {
-      return `https://drone-github-ecase.fivium.co.uk/${this.repoName}/${build.buildNumber}`;
+      if (this.repoType === "ecase") {
+        return `${import.meta.env.VITE_DRONE_ECASE_API_URL}/${this.repoName}/${build.buildNumber}`;
+      } else {
+        return `${import.meta.env.VITE_DIGITAL_ECASE_API_URL}/${this.repoName}/${build.buildNumber}`;
+      }
     },
     branchLink(build: DroneBuild): string {
       return `https://github.com/${this.repoName}/tree/${build.sourceBranch}`;
@@ -151,7 +178,7 @@ export default defineComponent({
 
   async created() {
     try {
-      await this.droneBuildsStore.fetchDroneBuilds(this.repoName);
+      await this.droneBuildsStore.fetchDroneBuilds(this.repoName, this.repoType);
     } catch (error: unknown) {
       console.error(error);
     } finally {

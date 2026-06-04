@@ -2,6 +2,8 @@ import {defineStore} from "pinia";
 import {computed, ref} from "vue";
 import {DroneRepo, getDroneRepos} from "@/js/api/dronetrics.api";
 
+export type DroneRepoType = 'ecase' | 'digital';
+
 export const useDroneReposStore = defineStore("dronetrics/repos", () => {
     const droneRepos = ref<DroneRepo[]>([]);
 
@@ -11,8 +13,9 @@ export const useDroneReposStore = defineStore("dronetrics/repos", () => {
             .sort((a, b) => new Date(b.build.lastUpdated).getTime() - new Date(a.build.lastUpdated).getTime());
     });
 
-    async function fetchDroneRepos() {
-        droneRepos.value = await getDroneRepos();
+    async function fetchDroneRepos(repoType: DroneRepoType) {
+        console.log(`Fetching drone repos for ${repoType}`);
+        droneRepos.value = await getDroneRepos(repoType);
     }
 
     return {

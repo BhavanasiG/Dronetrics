@@ -1,3 +1,5 @@
+import {DroneRepoType} from "@/store/dronetrics-repos.store";
+
 const DRONETRICS_ENDPOINT = "/rest/api/drone";
 
 export type DroneRepo = {
@@ -43,8 +45,8 @@ export type BuildEvent =
     | 'CUSTOM'
     | 'UNKNOWN';
 
-export async function getDroneRepos(): Promise<DroneRepo[]> {
-    const response = await fetch(DRONETRICS_ENDPOINT + "/repos");
+export async function getDroneRepos(repoType: DroneRepoType): Promise<DroneRepo[]> {
+    const response = await fetch(DRONETRICS_ENDPOINT + `/${repoType}/repos`);
 
     if (!response.ok) {
         throw new Error(`Failed to fetch drone data: ${response.status}`);
@@ -53,8 +55,8 @@ export async function getDroneRepos(): Promise<DroneRepo[]> {
     return await response.json();
 }
 
-export async function getSpecificDroneBuild(fullRepoName: string): Promise<DroneBuild[]> {
-    const response = await fetch(DRONETRICS_ENDPOINT + `/builds?repoName=${fullRepoName}`);
+export async function getSpecificDroneBuild(fullRepoName: string, repoType: DroneRepoType): Promise<DroneBuild[]> {
+    const response = await fetch(DRONETRICS_ENDPOINT + `/${repoType}/builds?repoName=${fullRepoName}`);
 
     if (!response.ok) {
         throw new Error(`Failed to fetch drone data: ${response.status}`);

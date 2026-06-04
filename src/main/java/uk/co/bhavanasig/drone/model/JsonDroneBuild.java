@@ -121,15 +121,6 @@ public class JsonDroneBuild {
     return this;
   }
 
-//  public Long getLastUpdated() {
-//    return lastUpdated;
-//  }
-//
-//  public JsonDroneBuild setLastUpdated(Long lastUpdated) {
-//    this.lastUpdated = lastUpdated;
-//    return this;
-//  }
-
   public LocalDateTime getLastUpdated() {
     return lastUpdated;
   }

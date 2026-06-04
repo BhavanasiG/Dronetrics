@@ -1,12 +1,33 @@
 <template>
   <div style="padding: 2rem;">
 
-    <DataTable v-model:filters="filters" :globalFilterFields="['repoName']" :loading="isLoading" :sortOrder="-1" :value="sortedDroneRepos" sortField="build.lastUpdated" stripedRows>
+    <DataTable
+        v-model:filters="filters"
+        :globalFilterFields="['repoName']"
+        :loading="isLoading" :sortOrder="-1"
+        :value="sortedDroneRepos"
+        sortField="build.lastUpdated"
+        stripedRows
+    >
       <template #header>
-        <div style="display: flex; justify-content: flex-end;">
+        <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+          <MultiSelect
+              v-model="filters['build.status'].value"
+              :maxSelectedLabels="1"
+              :options="statusOptions"
+              placeholder="Filter by Status"
+              style="min-width: 14rem"
+          >
+            <template #option="slotProps">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span>{{ slotProps.option }}</span>
+              </div>
+            </template>
+          </MultiSelect>
+
           <IconField>
-            <InputIcon class="pi pi-search" />
-            <InputText v-model="filters['global'].value" placeholder="Search repositories" />
+            <InputIcon class="pi pi-search"/>
+            <InputText v-model="filters['global'].value" placeholder="Search repositories"/>
           </IconField>
         </div>
       </template>
@@ -15,28 +36,27 @@
 
       <Column field="repoName" header="Repository Name" sortable>
         <template #body="{ data }">
-          <router-link :to="{ name: 'builds', query: { repo: data.repoName } }">{{ data.repoName }}</router-link>
+          <router-link :to="{ name: 'builds', query: { repo: data.repoName, repoType: repoType } }">{{
+              data.repoName
+            }}
+          </router-link>
         </template>
       </Column>
       <Column field="build.lastUpdated" header="Last Updated" sortable></Column>
       <Column field="build.buildNumber" header="Build Number">
         <template #body="{ data }">
-          <a :href="buildLink(data)" target="_blank" rel="noopener noreferrer">{{ data.build.buildNumber }}</a>
+          <a :href="buildLink(data)" rel="noopener noreferrer" target="_blank">{{ data.build.buildNumber }}</a>
         </template>
       </Column>
       <Column field="build.status" header="Status"></Column>
       <Column field="build.author" header="Author" sortable>
         <template #body="{ data }">
           <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <Avatar :image="data.build.authorAvatar" shape="circle" />
+            <Avatar :image="data.build.authorAvatar" shape="circle"/>
             <span>{{ data.build.author }}</span>
           </div>
         </template>
       </Column>
-    </DataTable>
-
-    <DataTable :loading="isLoading" stripedRows>
-
     </DataTable>
   </div>
 </template>
@@ -49,16 +69,23 @@ import DataTable from "primevue/datatable";
 import IconField from "primevue/iconfield";
 import InputIcon from "primevue/inputicon";
 import InputText from "primevue/inputtext";
-import {defineComponent} from "vue";
+import {defineComponent, PropType} from "vue";
 import {getFavicon} from "@/branding/logo";
-import {useDroneReposStore} from "@/store/dronetrics-repos.store";
 import {DroneRepo} from "@/js/api/dronetrics.api";
+import {DroneRepoType} from "@/store/dronetrics-repos.store";
+import {MultiSelect} from "primevue";
 
 export default defineComponent({
   methods: {
     getFavicon,
     buildLink(repo: DroneRepo): string {
-      return `https://drone-github-ecase.fivium.co.uk/${repo.repoName}/${repo.build.buildNumber}`;
+      if (this.repoType === "ecase") {
+        console.log(import.meta.env.VITE_DRONE_ECASE_API_URL);
+        return `${import.meta.env.VITE_DRONE_ECASE_API_URL}/${repo.repoName}/${repo.build.buildNumber}`;
+      } else {
+        console.log(import.meta.env.VITE_DIGITAL_ECASE_API_URL)
+        return `${import.meta.env.VITE_DIGITAL_ECASE_API_URL}/${repo.repoName}/${repo.build.buildNumber}`;
+      }
     },
   },
   components: {
@@ -68,36 +95,35 @@ export default defineComponent({
     IconField,
     InputIcon,
     InputText,
+    MultiSelect,
+  },
+  props: {
+    sortedDroneRepos: {
+      type: Array as PropType<DroneRepo[]>,
+      required: true,
+    },
+    isLoading: {
+      type: Boolean,
+      required: true,
+    },
+    repoType: {
+      type: Object as PropType<DroneRepoType>,
+      required: true,
+    }
   },
   data() {
+    const statusOptions: string[] = [
+      'PENDING', 'RUNNING', 'SUCCESS', 'FAILURE',
+      'KILLED', 'ERROR', 'SKIPPED', 'BLOCKED',
+      'DECLINED', 'WAITING_ON_DEPENDENCIES', 'UNKNOWN'
+    ];
     return {
-      isLoading: true,
+      statusOptions,
       filters: {
         global: {value: null as string | null, matchMode: FilterMatchMode.CONTAINS},
+        'build.status': {value: null as string[] | null, matchMode: FilterMatchMode.IN}
       },
     };
-  },
-  setup() {
-    const droneRepoStore = useDroneReposStore();
-    return {
-      droneRepoStore,
-    };
-  },
-  computed: {
-    sortedDroneRepos(): DroneRepo[] {
-      console.log(this.droneRepoStore.sortedDroneRepos)
-      return this.droneRepoStore.sortedDroneRepos;
-    },
-  },
-
-  async created() {
-    try {
-      await this.droneRepoStore.fetchDroneRepos();
-    } catch (error: unknown) {
-      console.error(error);
-    } finally {
-      this.isLoading = false;
-    }
   },
 });
 </script>

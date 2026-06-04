@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {computed, ref} from "vue";
 import {DroneBuild, getSpecificDroneBuild} from "@/js/api/dronetrics.api";
+import {DroneRepoType} from "@/store/dronetrics-repos.store";
 
 export const useDroneBuildsStore = defineStore("dronetrics/builds", () => {
     const droneBuilds = ref<DroneBuild[]>([]);
@@ -10,8 +11,8 @@ export const useDroneBuildsStore = defineStore("dronetrics/builds", () => {
             .sort((a, b) => b.buildNumber - a.buildNumber);
     });
 
-    async function fetchDroneBuilds(fullRepoName: string) {
-        droneBuilds.value = await getSpecificDroneBuild(fullRepoName);
+    async function fetchDroneBuilds(fullRepoName: string, repoType: DroneRepoType) {
+        droneBuilds.value = await getSpecificDroneBuild(fullRepoName, repoType);
     }
 
     return {
