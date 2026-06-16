@@ -1,5 +1,7 @@
 package uk.co.bhavanasig.drone.service;
 
+import static uk.co.bhavanasig.drone.service.RepoServiceUtil.validateEnvs;
+
 import java.time.Duration;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +21,7 @@ public class DroneApiDigitalRepoService {
                                     @Value("${drone.digital.api.url}") String droneApiBaseUrl,
                                     @Value("${drone.digital.api.bearer-token}") String bearerToken,
                                     @Value("${drone.api.connection-timeout-seconds}") int connectionTimeoutSeconds) {
+    validateEnvs(droneApiBaseUrl, bearerToken, connectionTimeoutSeconds);
     var clientRequestFactory = new JdkClientHttpRequestFactory();
     clientRequestFactory.setReadTimeout(Duration.ofSeconds(connectionTimeoutSeconds));
 
@@ -37,6 +40,6 @@ public class DroneApiDigitalRepoService {
     return restClient.get()
         .uri("/api/repos/%s/builds".formatted(repoName))
         .retrieve()
-        .body(new ParameterizedTypeReference<>() {});
+        .body(new ParameterizedTypeReference<List<JsonDroneBuild>>() {}); // Keep the explicit type for readability
   }
 }

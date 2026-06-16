@@ -14,7 +14,6 @@ export const useDroneReposStore = defineStore("dronetrics/repos", () => {
     });
 
     async function fetchDroneRepos(repoType: DroneRepoType) {
-        console.log(`Fetching drone repos for ${repoType}`);
         droneRepos.value = await getDroneRepos(repoType);
     }
 

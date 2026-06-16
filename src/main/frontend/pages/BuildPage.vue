@@ -124,7 +124,7 @@ export default defineComponent({
 
       const byBranch = new Map<string, DroneBuild>();
       const prTitleByBranch = new Map<string, string>();
-      const prTitleToLink = new Map<string, string>();
+      const prLinkByBranch = new Map<string, string>();
 
       for (const build of this.droneBuildsStore.sortedDroneBuilds) {
         const existing = byBranch.get(build.sourceBranch);
@@ -133,9 +133,9 @@ export default defineComponent({
           byBranch.set(build.sourceBranch, build);
         }
 
-        if (build.event === "PULL_REQUEST" && (!prTitleByBranch.has(build.sourceBranch) || !prTitleToLink.has(build.sourceBranch))) {
+        if (build.event === "PULL_REQUEST" && (!prTitleByBranch.has(build.sourceBranch) || !prLinkByBranch.has(build.sourceBranch))) {
           prTitleByBranch.set(build.sourceBranch, build.title);
-          prTitleToLink.set(build.sourceBranch, build.link);
+          prLinkByBranch.set(build.sourceBranch, build.link);
         }
       }
 
@@ -145,7 +145,7 @@ export default defineComponent({
       });
 
       return [...withPrTitle].map(build => {
-        const prLink = prTitleToLink.get(build.sourceBranch);
+        const prLink = prLinkByBranch.get(build.sourceBranch);
         return prLink ? {...build, link: prLink} : build;
       });
     },
@@ -159,7 +159,7 @@ export default defineComponent({
       if (this.repoType === "ecase") {
         return `${import.meta.env.VITE_DRONE_ECASE_API_URL}/${this.repoName}/${build.buildNumber}`;
       } else {
-        return `${import.meta.env.VITE_DIGITAL_ECASE_API_URL}/${this.repoName}/${build.buildNumber}`;
+        return `${import.meta.env.VITE_DRONE_DIGITAL_API_URL}/${this.repoName}/${build.buildNumber}`;
       }
     },
     branchLink(build: DroneBuild): string {

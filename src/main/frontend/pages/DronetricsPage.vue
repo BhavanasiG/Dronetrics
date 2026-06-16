@@ -11,32 +11,23 @@
 </template>
 
 <script lang="ts">
-import Column from "primevue/column";
-import DataTable from "primevue/datatable";
-import {defineComponent, ref} from "vue";
-import {getFavicon} from "@/branding/logo";
+import {defineComponent} from "vue";
 import ReposTable from "@/components/ReposTable.vue";
 import EcaseReposTable from "@/components/EcaseReposTable.vue";
 import DigitalReposTable from "@/components/DigitalReposTable.vue";
 import {SelectButton} from "primevue";
 
 export default defineComponent({
-  methods: {getFavicon},
   components: {
     DigitalReposTable,
     EcaseReposTable,
     ReposTable,
-    DataTable,
-    Column,
     SelectButton,
   },
 
   data() {
-    const visible = ref(false);
     const options = ["eCase", "Digital"]
     return {
-      logoSvg: getFavicon(),
-      visible,
       options,
       value: "eCase",
     };

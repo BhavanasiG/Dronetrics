@@ -80,11 +80,9 @@ export default defineComponent({
     getFavicon,
     buildLink(repo: DroneRepo): string {
       if (this.repoType === "ecase") {
-        console.log(import.meta.env.VITE_DRONE_ECASE_API_URL);
         return `${import.meta.env.VITE_DRONE_ECASE_API_URL}/${repo.repoName}/${repo.build.buildNumber}`;
       } else {
-        console.log(import.meta.env.VITE_DIGITAL_ECASE_API_URL)
-        return `${import.meta.env.VITE_DIGITAL_ECASE_API_URL}/${repo.repoName}/${repo.build.buildNumber}`;
+        return `${import.meta.env.VITE_DRONE_DIGITAL_API_URL}/${repo.repoName}/${repo.build.buildNumber}`;
       }
     },
   },
@@ -107,7 +105,7 @@ export default defineComponent({
       required: true,
     },
     repoType: {
-      type: Object as PropType<DroneRepoType>,
+      type: String as PropType<DroneRepoType>,
       required: true,
     }
   },

@@ -2,6 +2,7 @@ package uk.co.bhavanasig;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,9 +18,9 @@ public class CoreWebSecurityConfig {
   @Bean
   public SecurityFilterChain coreWebSecurityConfigFilterChain(HttpSecurity http) {
     http.csrf(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
-        .formLogin(AbstractHttpConfigurer::disable)
-        .httpBasic(AbstractHttpConfigurer::disable);
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(HttpMethod.GET, "/rest/api/drone/**").permitAll()
+        );
 
     return http.build();
   }

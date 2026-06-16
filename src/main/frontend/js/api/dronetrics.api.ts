@@ -4,7 +4,7 @@ const DRONETRICS_ENDPOINT = "/rest/api/drone";
 
 export type DroneRepo = {
     repoName: string,
-    link: string,
+    // link: string,
     build: DroneBuild,
 }
 
@@ -19,7 +19,7 @@ export interface DroneBuild {
     targetBranch: string;
     authorAvatar: string;
     author: string;
-    lastUpdated: Date;
+    lastUpdated: string;
 }
 
 export type BuildStatus =

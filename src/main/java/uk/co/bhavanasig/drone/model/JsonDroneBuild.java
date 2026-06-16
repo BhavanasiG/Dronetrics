@@ -126,10 +126,9 @@ public class JsonDroneBuild {
   }
 
   public JsonDroneBuild setLastUpdated(Long lastUpdated) {
-    this.lastUpdated = LocalDateTime.ofEpochSecond(
-        lastUpdated, 0,
-        ZoneId.of("Europe/London").getRules().getOffset(Instant.now())
-    );
+    this.lastUpdated = Instant.ofEpochSecond(lastUpdated)
+        .atZone(ZoneId.of("Europe/London"))
+        .toLocalDateTime();
     return this;
   }
 }
