@@ -2,7 +2,6 @@ package uk.co.bhavanasig.drone.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,22 +23,22 @@ public class DroneApiRestController {
   }
 
   @GetMapping("/ecase/repos")
-  public ResponseEntity<?> getEcaseDroneApiData() {
+  public ResponseEntity<?> getEcaseRepos() {
     return ResponseEntity.ok(droneApiEcaseRepoService.getDroneRepos());
   }
 
   @GetMapping("/digital/repos")
-  public ResponseEntity<?> getDigitalDroneApiData() {
+  public ResponseEntity<?> getDigitalRepos() {
     return ResponseEntity.ok(droneApiDigitalRepoService.getDroneRepos());
   }
 
   @GetMapping("/ecase/builds")
-  public ResponseEntity<?> getEcaseDroneApiData(@RequestParam String repoName) {
-    return ResponseEntity.ok(droneApiEcaseRepoService.getDroneBuilds(repoName));
+  public ResponseEntity<?> getEcaseBuilds(@RequestParam String repoName, @RequestParam(defaultValue = "1") Integer page) {
+    return ResponseEntity.ok(droneApiEcaseRepoService.getDroneBuilds(repoName, page));
   }
 
   @GetMapping("/digital/builds")
-  public ResponseEntity<?> getDigitalDroneApiData(@RequestParam String repoName) {
-    return ResponseEntity.ok(droneApiDigitalRepoService.getDroneBuilds(repoName));
+  public ResponseEntity<?> getDigitalBuilds(@RequestParam String repoName, @RequestParam(defaultValue = "1") Integer page) {
+    return ResponseEntity.ok(droneApiDigitalRepoService.getDroneBuilds(repoName, page));
   }
 }

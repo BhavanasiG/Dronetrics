@@ -1,11 +1,18 @@
 <template>
   <div style="padding: 2rem;">
 
+    <p><i style="display: block; text-align: start;">Found {{ sortedDroneRepos.length }} repositories</i></p>
+
     <DataTable
         v-model:filters="filters"
         :globalFilterFields="['repoName']"
-        :loading="isLoading" :sortOrder="-1"
+        :loading="isLoading"
+        :rows="10"
+        :rowsPerPageOptions="[5].concat((Math.floor(sortedDroneRepos.length/10)) > 10 ? [10, (Math.floor(sortedDroneRepos.length/10))]
+            : [(Math.floor(sortedDroneRepos.length/10))])"
+        :sortOrder="-1"
         :value="sortedDroneRepos"
+        paginator
         sortField="build.lastUpdated"
         stripedRows
     >

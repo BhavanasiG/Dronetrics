@@ -21,7 +21,7 @@ public class DroneApiEcaseRepoService {
                                   @Value("${drone.ecase.api.url}") String droneApiBaseUrl,
                                   @Value("${drone.ecase.api.bearer-token}") String bearerToken,
                                   @Value("${drone.api.connection-timeout-seconds}") int connectionTimeoutSeconds) {
-    validateEnvs(droneApiBaseUrl, bearerToken, connectionTimeoutSeconds);
+    validateEnvs(droneApiBaseUrl, bearerToken, connectionTimeoutSeconds, true);
     var clientRequestFactory = new JdkClientHttpRequestFactory();
     clientRequestFactory.setReadTimeout(Duration.ofSeconds(connectionTimeoutSeconds));
 
@@ -36,10 +36,16 @@ public class DroneApiEcaseRepoService {
     return DroneApiServiceUtil.getDroneRepos(restClient);
   }
 
-  public List<JsonDroneBuild> getDroneBuilds(String repoName) {
-    return restClient.get()
-        .uri("/api/repos/%s/builds".formatted(repoName))
+  public List<JsonDroneBuild> getDroneBuilds(String repoName, int page) {
+    var builds = restClient.get()
+        .uri(uriBuilder -> uriBuilder
+            .path("/api/repos/%s/builds".formatted(repoName))
+            .queryParam("per_page", 100)
+            .queryParam("page", page)
+            .build())
         .retrieve()
         .body(new ParameterizedTypeReference<List<JsonDroneBuild>>() {}); // Keep the explicit type for readability
+
+    return builds == null ? List.of() : builds;
   }
 }

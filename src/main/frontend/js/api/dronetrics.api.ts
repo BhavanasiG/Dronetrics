@@ -56,7 +56,7 @@ export async function getDroneRepos(repoType: DroneRepoType): Promise<DroneRepo[
 }
 
 export async function getSpecificDroneBuild(fullRepoName: string, repoType: DroneRepoType): Promise<DroneBuild[]> {
-    const response = await fetch(DRONETRICS_ENDPOINT + `/${repoType}/builds?repoName=${fullRepoName}`);
+    const response = await fetch(DRONETRICS_ENDPOINT + `/${repoType}/builds?repoName=${encodeURIComponent(fullRepoName)}`);
 
     if (!response.ok) {
         throw new Error(`Failed to fetch drone data: ${response.status}`);

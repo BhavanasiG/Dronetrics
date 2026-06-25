@@ -20,6 +20,7 @@ public class CoreWebSecurityConfig {
     http.csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(HttpMethod.GET, "/rest/api/drone/**").permitAll()
+            .anyRequest().denyAll()
         );
 
     return http.build();

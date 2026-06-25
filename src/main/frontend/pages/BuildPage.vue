@@ -3,9 +3,19 @@
     <router-link :to="{ name: 'repos' }">&larr; Back to repositories</router-link>
 
     <h1 style="margin: 1rem 0 2rem;">{{ repoName }}</h1>
-    <p>All builds for this repository.</p>
+    <p>Most recent {{ builds.length }} builds for this repository.</p>
 
-    <DataTable v-model:filters="filters" :loading="isLoading" :sortOrder="-1" :value="builds" sortField="buildNumber" stripedRows>
+    <DataTable
+        v-model:filters="filters"
+        :loading="isLoading"
+        :rows="10"
+        :rowsPerPageOptions="[5].concat((Math.floor(builds.length/10)) > 10 ? [10, (Math.floor(builds.length/10))]
+            : [(Math.floor(builds.length/10))])"
+        :value="builds"
+        paginator
+        sortField="buildNumber"
+        stripedRows
+    >
       <template #header>
         <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end;">
           <div style="display: flex; align-items: center; gap: 0.5rem;">
