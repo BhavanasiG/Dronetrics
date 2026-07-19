@@ -27,14 +27,14 @@ public class DroneApiRestController {
     return ResponseEntity.ok(droneApiEcaseRepoService.getDroneRepos());
   }
 
-  @GetMapping("/digital/repos")
-  public ResponseEntity<?> getDigitalRepos() {
-    return ResponseEntity.ok(droneApiDigitalRepoService.getDroneRepos());
-  }
-
   @GetMapping("/ecase/builds")
   public ResponseEntity<?> getEcaseBuilds(@RequestParam String repoName, @RequestParam(defaultValue = "1") Integer page) {
     return ResponseEntity.ok(droneApiEcaseRepoService.getDroneBuilds(repoName, page));
+  }
+
+  @GetMapping("/digital/repos")
+  public ResponseEntity<?> getDigitalRepos() {
+    return ResponseEntity.ok(droneApiDigitalRepoService.getDroneRepos());
   }
 
   @GetMapping("/digital/builds")

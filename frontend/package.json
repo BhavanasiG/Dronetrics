@@ -5,12 +5,12 @@
   "private": true,
   "description": "",
   "scripts": {
-    "dev": "vite dev src/main/frontend --mode=development",
-    "build": "vite build src/main/frontend",
-    "preview": "vite preview src/main/frontend",
-    "test": "vitest run --coverage",
-    "lint": "eslint src/main/frontend --fix",
-    "format": "prettier --write src/"
+    "dev": "../node_modules/.bin/vite dev src/main/frontend --mode=development",
+    "build": "../node_modules/.bin/vite build src/main/frontend",
+    "preview": "../node_modules/.bin/vite preview src/main/frontend",
+    "test": "../node_modules/.bin/vitest run --coverage",
+    "lint": "../node_modules/.bin/eslint src/main/frontend --fix",
+    "format": "../node_modules/.bin/prettier --write src/"
   },
   "dependencies": {
     "@primevue/themes": "^4.5.4",
