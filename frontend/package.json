@@ -5,36 +5,36 @@
   "private": true,
   "description": "",
   "scripts": {
-    "dev": "../node_modules/.bin/vite dev src/main/frontend --mode=development",
-    "build": "../node_modules/.bin/vite build src/main/frontend",
-    "preview": "../node_modules/.bin/vite preview src/main/frontend",
-    "test": "../node_modules/.bin/vitest run --coverage",
-    "lint": "../node_modules/.bin/eslint src/main/frontend --fix",
-    "format": "../node_modules/.bin/prettier --write src/"
+    "dev": "vite --config vite.config.ts --mode=development",
+    "build": "vite build --config vite.config.ts",
+    "preview": "vite preview --config vite.config.ts",
+    "test": "vitest run --coverage",
+    "lint": "eslint src/main/frontend --fix",
+    "format": "prettier --write src/"
   },
   "dependencies": {
     "@primevue/themes": "^4.5.4",
-    "pinia": "^3.0.4",
-    "primeicons": "^7.0.0",
-    "primevue": "^4.5.5",
-    "vue": "^3.5.31",
-    "vue-router": "^5.0.4"
+    "pinia": "^4.0.2",
+    "primeicons": "^8.0.0",
+    "primevue": "^5.0.0",
+    "vue": "^3.5.40",
+    "vue-router": "^5.2.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^8.2.0",
-    "@types/node": "^25.5.2",
-    "@vitejs/plugin-vue": "^6.0.5",
-    "@vitest/coverage-v8": "^4.1.2",
+    "@antfu/eslint-config": "^9.2.0",
+    "@types/node": "^26.1.1",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vitest/coverage-v8": "^4.1.10",
     "@vue/eslint-config-prettier": "^10.2.0",
-    "@vue/test-utils": "^2.4.6",
-    "eslint": "^10.2.0",
-    "eslint-plugin-jest": "^29.15.1",
+    "@vue/test-utils": "^2.4.11",
+    "eslint": "^10.8.0",
+    "eslint-plugin-jest": "^29.16.0",
     "eslint-plugin-pinia": "^0.4.2",
     "eslint-plugin-testing-library": "^7.16.2",
-    "eslint-plugin-vue": "^10.8.0",
-    "prettier": "^3.8.1",
-    "typescript": "^6.0.2",
+    "eslint-plugin-vue": "^10.10.0",
+    "prettier": "^3.9.6",
+    "typescript": "^7.0.2",
     "vite": "^8.0.3",
-    "vitest": "^4.1.2"
+    "vitest": "^4.1.10"
   }
 }

@@ -44,7 +44,7 @@ public class DroneApiDigitalRepoService {
             .queryParam("page", page)
             .build())
         .retrieve()
-        .body(new ParameterizedTypeReference<List<JsonDroneBuild>>() {}); // Keep the explicit type for readability
+        .body(new ParameterizedTypeReference<List<JsonDroneBuild>>() {}); // Keeping the explicit type for readability
 
     return builds == null ? List.of() : builds;
   }

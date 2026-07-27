@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25-jdk AS build
+FROM eclipse-temurin:26-jdk AS build
 WORKDIR /app
 
 COPY gradlew .
@@ -11,9 +11,10 @@ RUN chmod +x gradlew
 RUN ./gradlew build -x test --no-daemon || true
 
 COPY src src
+COPY .env ./
 RUN ./gradlew bootJar -x test --no-daemon
 
-FROM eclipse-temurin:25-jre
+FROM eclipse-temurin:26-jre
 WORKDIR /app
 
 RUN groupadd -r spring && useradd -r -g spring spring

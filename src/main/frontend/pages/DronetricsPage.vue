@@ -5,10 +5,6 @@
       Use the table below to quickly check the health of your projects and access relevant links.</p>
 
 
-    <!--    <Image-->
-    <!--        alt="Drone" preview src="../static-assets/mavic.png" style="{position: absolute; top: 0px; left: 0px;}" width="150px"-->
-    <!--    />-->
-
     <SelectButton v-model="value" :allowEmpty="false" :options="options"/>
     <ecase-repos-table v-if="value === 'eCase'"/>
     <digital-repos-table v-if="value === 'Digital'"/>

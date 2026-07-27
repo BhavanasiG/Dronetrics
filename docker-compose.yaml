@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "2004:2004"
+    env_file:
+      - .env
     environment:
       - SERVER_PORT=2004
       - SPRING_DATA_REDIS_HOST=redis
@@ -16,8 +18,8 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
     ports:
       - "80:80"
     networks:
@@ -29,9 +31,9 @@ services:
     image: redis:alpine
     container_name: redis-cache
     ports:
-      - "6379:6379" # Accessible on your host machine at localhost:6379
+      - "6379:6379"
     volumes:
-      - redis-data:/data # Persists cache data if the container restarts
+      - redis-data:/data
     networks:
       - app-network
 

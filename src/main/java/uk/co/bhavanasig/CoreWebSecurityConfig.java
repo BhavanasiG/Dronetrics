@@ -12,7 +12,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class CoreWebSecurityConfig {
 
   /**
-   * This needs to be updated to not disable CSRF and have an actual security configuration.
+   * A minimal security configuration: allows read-only endpoints within Dronetrics and denies all else
+   * CSRF remains enabled (default)
    */
   @Bean
   public SecurityFilterChain coreWebSecurityConfigFilterChain(HttpSecurity http) {

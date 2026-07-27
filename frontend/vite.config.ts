@@ -5,10 +5,11 @@ import path from 'path'
 
 export default defineConfig({
     plugins: [vue()],
-    envDir: path.resolve(__dirname, '../../..'),
+    root: "../src/main/frontend",
+    envDir: path.resolve(__dirname, '../'),
     resolve: {
         alias: {
-            '@': fileURLToPath(new URL('./', import.meta.url))
+            '@': fileURLToPath(new URL('../src/main/frontend', import.meta.url))
         }
     },
     server: {
