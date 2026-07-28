@@ -8,6 +8,9 @@ export const useDroneReposStore = defineStore("dronetrics/repos", () => {
     const droneRepos = ref<DroneRepo[]>([]);
 
     const sortedDroneRepos = computed<DroneRepo[]>(() => {
+        droneRepos.value.forEach((droneRepo) => {
+            droneRepo.build.lastUpdated = droneRepo.build.lastUpdated.replace("T", " ")
+        });
         return [...droneRepos.value]
             .filter(d => d.build != null)
             .sort((a, b) => new Date(b.build.lastUpdated).getTime() - new Date(a.build.lastUpdated).getTime());

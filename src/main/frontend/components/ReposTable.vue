@@ -77,14 +77,12 @@ import IconField from "primevue/iconfield";
 import InputIcon from "primevue/inputicon";
 import InputText from "primevue/inputtext";
 import {defineComponent, PropType} from "vue";
-import {getFavicon} from "@/branding/logo";
 import {DroneRepo} from "@/js/api/dronetrics.api";
 import {DroneRepoType} from "@/store/dronetrics-repos.store";
-import {MultiSelect} from "primevue";
+import MultiSelect from "primevue/multiselect";
 
 export default defineComponent({
   methods: {
-    getFavicon,
     buildLink(repo: DroneRepo): string {
       if (this.repoType === "ecase") {
         return `${import.meta.env.VITE_DRONE_ECASE_API_URL}/${repo.repoName}/${repo.build.buildNumber}`;

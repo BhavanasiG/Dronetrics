@@ -11,7 +11,6 @@ RUN chmod +x gradlew
 RUN ./gradlew build -x test --no-daemon || true
 
 COPY src src
-COPY .env ./
 RUN ./gradlew bootJar -x test --no-daemon
 
 FROM eclipse-temurin:26-jre

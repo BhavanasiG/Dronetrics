@@ -10,10 +10,27 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+import tools.jackson.databind.ObjectMapper;
 
 @Configuration
 @EnableCaching
 public class RedisConfig {
+
+  @Bean
+  public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+    RedisTemplate<String, Object> template = new RedisTemplate<>();
+    template.setConnectionFactory(factory);
+
+    var serializer = new GenericJacksonJsonRedisSerializer(new ObjectMapper());
+    template.setKeySerializer(new StringRedisSerializer());
+    template.setValueSerializer(serializer);
+    template.afterPropertiesSet();
+
+    return template;
+  }
 
   @Bean
   public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {

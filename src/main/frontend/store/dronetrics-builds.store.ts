@@ -7,6 +7,9 @@ export const useDroneBuildsStore = defineStore("dronetrics/builds", () => {
     const droneBuilds = ref<DroneBuild[]>([]);
 
     const sortedDroneBuilds = computed<DroneBuild[]>(() => {
+        droneBuilds.value.forEach((droneBuild) => {
+            droneBuild.lastUpdated = droneBuild.lastUpdated.replace("T", " ")
+        });
         return [...droneBuilds.value]
             .sort((a, b) => b.buildNumber - a.buildNumber);
     });

@@ -47,6 +47,12 @@
           <a :href="data.link" rel="noopener noreferrer" target="_blank">{{ data.title }}</a>
         </template>
       </Column>
+      <Column header="JIRA ticket">
+        <template #body="{ data }">
+          <a v-if="data?.jiraRef" :href="data.jiraLink" rel="noopener noreferrer" target="_blank">{{ data.jiraRef }}</a>
+          <p v-else> No Jira ticket ref</p>
+        </template>
+      </Column>
       <Column field="sourceBranch" header="Branch">
         <template #body="{ data }">
           <a :href="branchLink(data)" rel="noopener noreferrer" target="_blank">{{ data.sourceBranch }}</a>
@@ -135,6 +141,7 @@ export default defineComponent({
       const byBranch = new Map<string, DroneBuild>();
       const prTitleByBranch = new Map<string, string>();
       const prLinkByBranch = new Map<string, string>();
+      const jiraRefByBranch = new Map<string, string | null>();
 
       for (const build of this.droneBuildsStore.sortedDroneBuilds) {
         const existing = byBranch.get(build.sourceBranch);
@@ -147,6 +154,10 @@ export default defineComponent({
           prTitleByBranch.set(build.sourceBranch, build.title);
           prLinkByBranch.set(build.sourceBranch, build.link);
         }
+
+        if (!jiraRefByBranch.has(build.sourceBranch)) {
+          jiraRefByBranch.set(build.sourceBranch, build.sourceBranch.match(/[A-Z][A-Z0-9]+-\d+/)?.[0] ?? null);
+        }
       }
 
       const withPrTitle = [...byBranch.values()].map(build => {
@@ -154,9 +165,15 @@ export default defineComponent({
         return prTitle ? {...build, title: prTitle} : build;
       });
 
-      return [...withPrTitle].map(build => {
+      const withPrLink = [...withPrTitle].map(build => {
         const prLink = prLinkByBranch.get(build.sourceBranch);
         return prLink ? {...build, link: prLink} : build;
+      });
+
+      return [...withPrLink].map(build => {
+        const jiraRef = jiraRefByBranch.get(build.sourceBranch);
+        const jiraLink = `${import.meta.env.VITE_JIRA_TICKET_BROWSE_URL}/${jiraRef}`;
+        return jiraRef ? {...build, jiraLink: jiraLink, jiraRef: jiraRef} : build;
       });
     },
     authorOptions(): string[] {

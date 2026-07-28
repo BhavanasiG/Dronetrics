@@ -15,11 +15,10 @@
 import {defineComponent} from "vue";
 import EcaseReposTable from "@/components/EcaseReposTable.vue";
 import DigitalReposTable from "@/components/DigitalReposTable.vue";
-import {Image, SelectButton} from "primevue";
+import SelectButton from "primevue/selectbutton";
 
 export default defineComponent({
   components: {
-    Image,
     DigitalReposTable,
     EcaseReposTable,
     SelectButton,
