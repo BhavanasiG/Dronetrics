@@ -1,5 +1,5 @@
 import {createRouter, createWebHistory} from "vue-router";
-import DronetricsPage from "@/pages/DronetricsPage.vue";
+import DronetricsPage from "./pages/DronetricsPage.vue";
 import BuildPage from "@/pages/BuildPage.vue";
 
 export const router = createRouter({

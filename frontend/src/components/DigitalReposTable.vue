@@ -3,10 +3,10 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
 import {useDroneReposStore} from "@/store/dronetrics-repos.store";
 import {DroneRepo} from "@/js/api/dronetrics.api";
 import ReposTable from "@/components/ReposTable.vue";
+import {defineComponent} from "vue";
 
 export default defineComponent({
   components: {

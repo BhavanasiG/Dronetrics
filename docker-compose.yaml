@@ -23,8 +23,8 @@ services:
 
   frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
+      context: ./frontend
+      dockerfile: Dockerfile
       args:
         - VITE_DRONE_ECASE_API_URL=${VITE_DRONE_ECASE_API_URL}
         - VITE_DRONE_DIGITAL_API_URL=${VITE_DRONE_DIGITAL_API_URL}

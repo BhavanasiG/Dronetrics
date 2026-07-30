@@ -12,10 +12,10 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import EcaseReposTable from "@/components/EcaseReposTable.vue";
-import DigitalReposTable from "@/components/DigitalReposTable.vue";
 import SelectButton from "primevue/selectbutton";
+import {defineComponent} from "vue";
+import DigitalReposTable from "../components/DigitalReposTable.vue";
+import EcaseReposTable from "../components/EcaseReposTable.vue";
 
 export default defineComponent({
   components: {
@@ -25,7 +25,7 @@ export default defineComponent({
   },
 
   data() {
-    const options = ["eCase", "Digital"]
+    const options = ["eCase", "Digital"];
     return {
       options,
       value: "eCase",

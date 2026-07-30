@@ -35,7 +35,6 @@ export function getFavicon() {
   `.trim();
 }
 
-
 /**
  * Injects the Dronetrics logo as the browser favicon.
  * The SVG was created on Figma
@@ -46,9 +45,9 @@ export function setDynamicFavicon() {
 
   let link = document.querySelector("link[rel~='icon']");
   if (!link) {
-    link = document.createElement('link');
-    link.rel = 'icon';
-    document.getElementsByTagName('head')[0].appendChild(link);
+    link = document.createElement("link");
+    link.rel = "icon";
+    document.getElementsByTagName("head")[0].appendChild(link);
   }
   link.href = faviconUrl;
 }

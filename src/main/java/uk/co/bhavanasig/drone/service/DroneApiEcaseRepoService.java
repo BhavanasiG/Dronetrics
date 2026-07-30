@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -19,14 +20,15 @@ import uk.co.bhavanasig.drone.model.JsonDroneRepo;
 public class DroneApiEcaseRepoService {
 
   private final RestClient restClient;
-//  private final RedisTemplate<String, Object> redisCache;
+  private final RedisTemplate<String, Object> redisCache;
 //  private final Clock clock;
 
   public DroneApiEcaseRepoService(RestClient.Builder restClientBuilder,
                                   @Value("${drone.ecase.api.url}") String droneApiBaseUrl,
                                   @Value("${drone.ecase.api.bearer-token}") String bearerToken,
-                                  @Value("${drone.api.connection-timeout-seconds}") int connectionTimeoutSeconds) {
-//    this.redisCache = redisCache;
+                                  @Value("${drone.api.connection-timeout-seconds}") int connectionTimeoutSeconds,
+                                  RedisTemplate<String, Object> redisCache) {
+    this.redisCache = redisCache;
     validateEnvs(droneApiBaseUrl, bearerToken, connectionTimeoutSeconds, true);
     var clientRequestFactory = new JdkClientHttpRequestFactory();
     clientRequestFactory.setReadTimeout(Duration.ofSeconds(connectionTimeoutSeconds));

@@ -2,9 +2,9 @@ import {createApp} from "vue";
 import PrimeVue from "primevue/config";
 import Aura from "@primevue/themes/aura";
 import "primeicons/primeicons.css";
-import App from "@/App.vue";
-import {router} from "@/router";
-import {setDynamicFavicon} from "@/branding/logo.js";
+import App from "./App.vue";
+import {router} from "./router.ts";
+import {setDynamicFavicon} from "./branding/logo.js";
 import {createPinia} from "pinia";
 
 

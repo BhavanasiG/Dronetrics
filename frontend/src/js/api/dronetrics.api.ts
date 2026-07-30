@@ -1,4 +1,4 @@
-import {DroneRepoType} from "@/store/dronetrics-repos.store";
+import {DroneRepoType} from "../../store/dronetrics-repos.store";
 
 const DRONETRICS_ENDPOINT = "/rest/api/drone";
 

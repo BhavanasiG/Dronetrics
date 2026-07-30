@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {computed, ref} from "vue";
-import {DroneBuild, getSpecificDroneBuild} from "@/js/api/dronetrics.api";
-import {DroneRepoType} from "@/store/dronetrics-repos.store";
+import {DroneRepoType} from "./dronetrics-repos.store";
+import {DroneBuild, getSpecificDroneBuild} from "../js/api/dronetrics.api";
 
 export const useDroneBuildsStore = defineStore("dronetrics/builds", () => {
     const droneBuilds = ref<DroneBuild[]>([]);

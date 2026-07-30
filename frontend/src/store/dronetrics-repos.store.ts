@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {computed, ref} from "vue";
-import {DroneRepo, getDroneRepos} from "@/js/api/dronetrics.api";
+import {DroneRepo, getDroneRepos} from "../js/api/dronetrics.api";
 
 export type DroneRepoType = 'ecase' | 'digital';
 
