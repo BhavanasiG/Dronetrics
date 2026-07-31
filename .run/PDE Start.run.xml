@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PDE Start" type="CompoundRunConfigurationType">
+    <toRun name="docker-compose.postgres.yaml: Compose Deployment" type="docker-deploy" />
+    <toRun name="docker-compose.yaml.redis: Compose Deployment" type="docker-deploy" />
+    <toRun name="Frontend (Vue)" type="js.build_tools.npm" />
+    <toRun name="DronetricsApplication" type="SpringBootApplicationConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>

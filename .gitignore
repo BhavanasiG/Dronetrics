@@ -1,0 +1,12 @@
+.idea
+.gradle
+.env
+out
+build/
+dist
+node_modules
+*.iml
+**/resources/static
+application-local.properties
+application-localCucumberScenario.properties
+.eslintcache

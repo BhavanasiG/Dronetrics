@@ -1,0 +1,68 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "2004:2004"
+    env_file:
+      - .env
+    environment:
+      - SERVER_PORT=2004
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/dronetrics
+      - SPRING_DATASOURCE_USERNAME=dronetrics
+      - SPRING_DATASOURCE_PASSWORD=dev1
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+      - redis
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_DRONE_ECASE_API_URL=${VITE_DRONE_ECASE_API_URL}
+        - VITE_DRONE_DIGITAL_API_URL=${VITE_DRONE_DIGITAL_API_URL}
+        - VITE_JIRA_TICKET_BROWSE_URL=${VITE_JIRA_TICKET_BROWSE_URL}
+    ports:
+      - "3000:80"
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: dronetrics
+      POSTGRES_PASSWORD: dev1
+      POSTGRES_DB: dronetrics
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dronetrics:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  postgres_data_dronetrics:
