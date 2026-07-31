@@ -5,12 +5,12 @@ import testingLibraryPlugin from "eslint-plugin-testing-library";
 
 export default antfu({
   stylistic: {
-    // indent: 2, // 4, or 'tab'
+    indent: 2, // 4, or 'tab'
     quotes: "double", // or 'double'
     semi: true,
     overrides: {
       "style/brace-style": ["error", "1tbs"],
-      // "style/indent-binary-ops": ["error", 4],
+      "style/indent-binary-ops": ["error", 4],
       "style/member-delimiter-style": ["error", {
         multiline: {
           delimiter: "comma",

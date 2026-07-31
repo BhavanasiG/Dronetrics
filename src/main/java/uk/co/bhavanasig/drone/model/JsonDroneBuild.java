@@ -2,33 +2,67 @@ package uk.co.bhavanasig.drone.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+@Entity
+@Table(name = "json_drone_builds")
+@IdClass(JsonDroneBuildId.class)
 public class JsonDroneBuild {
 
+  @Id
+  private String repoName;
+
+  @Id
   @JsonAlias("number")
   private Long buildNumber;
+
+  @Enumerated(EnumType.STRING)
   private BuildStatus status;
+
   private String link;
+
+  @Enumerated(EnumType.STRING)
   private BuildEvent event;
+
   private String title;
+
   @JsonAlias("source_repo")
   private String sourceRepo;
+
   @JsonAlias("source")
   private String sourceBranch;
+
   @JsonAlias("target")
   private String targetBranch;
+
   @JsonAlias("author_avatar")
   private String authorAvatar;
+
   @JsonAlias("sender")
   private String author;
+
   @JsonAlias("updated")
   private LocalDateTime lastUpdated;
 
   @JsonCreator
   public JsonDroneBuild() {
+  }
+
+  public String getRepoName() {
+    return repoName;
+  }
+
+  public JsonDroneBuild setRepoName(String repoName) {
+    this.repoName = repoName;
+    return this;
   }
 
   public Long getBuildNumber() {

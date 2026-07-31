@@ -68,10 +68,22 @@
         </template>
       </Column>
     </DataTable>
+
+    <div style="display: flex; justify-content: center; margin-top: 1.5rem;">
+      <Button
+          :loading="isFetchingOlder"
+          icon="pi pi-refresh"
+          label="Load Older Builds"
+          @click="loadOlder"
+      />
+    </div>
+
   </div>
 </template>
 
 <script lang="ts">
+import type {BuildEvent, DroneBuild} from "@/js/api/dronetrics.api";
+import type {DroneRepoType} from "@/store/dronetrics-repos.store";
 import {FilterMatchMode} from "@primevue/core/api";
 import Avatar from "primevue/avatar";
 import Checkbox from "primevue/checkbox";
@@ -81,8 +93,7 @@ import MultiSelect from "primevue/multiselect";
 import {defineComponent} from "vue";
 import {getFavicon} from "@/branding/logo";
 import {useDroneBuildsStore} from "@/store/dronetrics-builds.store";
-import {BuildEvent, DroneBuild} from "@/js/api/dronetrics.api";
-import {DroneRepoType} from "@/store/dronetrics-repos.store";
+import Button from "primevue/button";
 
 const EVENT_OPTIONS: BuildEvent[] = [
   "PUSH",
@@ -102,11 +113,21 @@ export default defineComponent({
     DataTable,
     Column,
     MultiSelect,
+    Button,
+  },
+
+  setup() {
+    const droneBuildsStore = useDroneBuildsStore();
+    return {
+      droneBuildsStore,
+    };
   },
 
   data() {
     return {
       isLoading: true,
+      isFetchingOlder: false,
+      currentPage: 1,
       showAll: false,
       logoSvg: getFavicon(),
       eventOptions: EVENT_OPTIONS,
@@ -114,13 +135,6 @@ export default defineComponent({
         author: {value: null as string[] | null, matchMode: FilterMatchMode.IN},
         event: {value: null as BuildEvent[] | null, matchMode: FilterMatchMode.IN},
       },
-    };
-  },
-
-  setup() {
-    const droneBuildsStore = useDroneBuildsStore();
-    return {
-      droneBuildsStore,
     };
   },
 
@@ -160,25 +174,35 @@ export default defineComponent({
         }
       }
 
-      const withPrTitle = [...byBranch.values()].map(build => {
+      const withPrTitle = [...byBranch.values()].map((build) => {
         const prTitle = prTitleByBranch.get(build.sourceBranch);
         return prTitle ? {...build, title: prTitle} : build;
       });
 
-      const withPrLink = [...withPrTitle].map(build => {
+      const withPrLink = [...withPrTitle].map((build) => {
         const prLink = prLinkByBranch.get(build.sourceBranch);
         return prLink ? {...build, link: prLink} : build;
       });
 
-      return [...withPrLink].map(build => {
+      return [...withPrLink].map((build) => {
         const jiraRef = jiraRefByBranch.get(build.sourceBranch);
         const jiraLink = `${import.meta.env.VITE_JIRA_TICKET_BROWSE_URL}/${jiraRef}`;
-        return jiraRef ? {...build, jiraLink: jiraLink, jiraRef: jiraRef} : build;
+        return jiraRef ? {...build, jiraLink, jiraRef} : build;
       });
     },
     authorOptions(): string[] {
       return [...new Set(this.builds.map(b => b.author).filter(Boolean))].sort();
     },
+  },
+
+  async created() {
+    try {
+      await this.droneBuildsStore.fetchDroneBuilds(this.repoName, this.repoType);
+    } catch (error: unknown) {
+      console.error(error);
+    } finally {
+      this.isLoading = false;
+    }
   },
 
   methods: {
@@ -201,16 +225,20 @@ export default defineComponent({
       }
       return candidate.buildNumber > current.buildNumber;
     },
-  },
 
-  async created() {
-    try {
-      await this.droneBuildsStore.fetchDroneBuilds(this.repoName, this.repoType);
-    } catch (error: unknown) {
-      console.error(error);
-    } finally {
-      this.isLoading = false;
-    }
+    async loadOlder() {
+      this.isFetchingOlder = true;
+      this.currentPage++;
+
+      try {
+        await this.droneBuildsStore.loadOlderBuilds(this.repoName, this.repoType, this.currentPage);
+      } catch (error: unknown) {
+        console.error("Failed to load more/older builds", error);
+        this.currentPage--;
+      } finally {
+        this.isFetchingOlder = false;
+      }
+    },
   },
 });
 </script>
